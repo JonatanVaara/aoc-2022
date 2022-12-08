@@ -83,9 +83,15 @@ def main(inputfile):
     with open(inputfile, 'r', encoding='utf-8') as file:
         commands = extract_commands(file)
     root = do_commands(commands)
+    unused_disk_space = 70000000 - root.get_dir_size()
+    print(f'root size: {root.get_dir_size()}')
+    needed = 30000000 - unused_disk_space
     size_list = calculate_sizes(root, [])
-    print(size_list)
     print(sum(filter(lambda x: x <= 100000, size_list)))
+    print(f'Unused_diskspace: {unused_disk_space}')
+    print(f'Needed disc space: {needed}')
+    smallest_size = get_size_smallest_needed(size_list, needed)
+    print(f'smallest_size: {smallest_size}')
 
 
 def calculate_sizes(root, acc):
@@ -94,6 +100,18 @@ def calculate_sizes(root, acc):
     for folder in root.folders:
         acc.append(sum(calculate_sizes(folder, acc)))
     return acc
+
+
+def get_size_smallest_needed(size_list, needed):
+    """Return the size of the smallest size that a folder has.
+    
+    To be used later to look through all the folders to find the one we need to delete.
+    Yes, it is fucking stupid. Yes, I am too lazy to re-write my previous solution."""
+    size_list.sort()
+    for size in size_list:
+        if size >= needed:
+            return size
+    return 0
 
 
 def do_commands(commands: []) -> Folder:
