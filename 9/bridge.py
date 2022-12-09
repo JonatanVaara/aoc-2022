@@ -9,94 +9,145 @@ def main(input):
     matrix = get_size_of_matrix(moves)
     matrix_copy = copy_matrix(matrix)
     visited = traverse(moves, matrix, matrix_copy)
-    #visited_positions = calculate_visited(matrix_copy)
-    #print(f'Positions visited: {visited_positions}')
+    print(f'Positions visited: {visited}')
+    
 
 
 def traverse(moves, matrix, matrix_copy):
     """Traverse the matrix and check off matrix_copy."""
     visited = 1
     h_pos = [0, 0]
-    t_pos = [0, 0]
-    for move in moves:
-        visited += move_h(move, matrix, matrix_copy, h_pos, t_pos)
+    1_pos = [0, 0]
+    2_pos = [0, 0]
+    3_pos = [0, 0]
+    4_pos = [0, 0]
+    5_pos = [0, 0]
+    6_pos = [0, 0]
+    7_pos = [0, 0]
+    8_pos = [0, 0]
+    9_pos = [0, 0]
 
-    pp(matrix, h_pos)
+
+    pp(matrix, h_pos, t_pos)
+    pp(matrix_copy, h_pos, t_pos)
+
+    for move in moves:
+        #print(f'Moving {move["direction"]} by {move["steps"]} steps')
+        visited += move_h(move, matrix, matrix_copy, h_pos, t_pos)
+        #print(f'flipped {visited} number of 0s')
+        #pp(matrix_copy, h_pos, t_pos)
+    pp(matrix, h_pos, t_pos)
+    pp(matrix_copy, h_pos, t_pos)
     return visited
 
 
-def move_t(matrix, matrix_copy, h_pos, l_pos):
+def move_t(matrix, matrix_copy, h_pos, t_pos):
     """Move T and switch coordinate points."""
     visited = 0
-    if h_pos[0] == l_pos[0]:  # Same row
-        if h_pos[1] == l_pos[1] - 2:  # two steps left
-            l_pos[0] -= 1
-        if h_pos[1] == l_pos[1] + 2:  # Two steps right
-            l_pos[1] += 1
+    if h_pos[0] == t_pos[0]:  # Same row
+        if h_pos[1] == t_pos[1] - 2:  # two steps left
+            t_pos[0] -= 1
+        if h_pos[1] == t_pos[1] + 2:  # Two steps right
+            t_pos[1] += 1
 
-    if h_pos[1] == l_pos[1]:  # Same column
-        if h_pos[0] == l_pos[0] - 2:
-            l_pos[0] -= 1
-        if h_pos[0] == l_pos[0] + 2:
-            l_pos[0] += 1
+    if h_pos[1] == t_pos[1]:  # Same column
+        if h_pos[0] == t_pos[0] - 2:
+            t_pos[0] -= 1
+        if h_pos[0] == t_pos[0] + 2:
+            t_pos[0] += 1
 
-    if h_pos[0] == l_pos[0] - 1 and h_pos[1] == l_pos[1] - 2:  # up 1 left 2
-        l_pos[0] -= 1
-        l_pos[1] -= 1
+    if h_pos[0] == t_pos[0] - 1 and h_pos[1] == t_pos[1] - 2:  # up 1 left 2
+        t_pos[0] -= 1
+        t_pos[1] -= 1
 
-    if h_pos[0] == l_pos[0] - 2 and h_pos[1] == l_pos[1] - 1:  # up 2 left 1
-        l_pos[0] -= 1
-        l_pos[1] -= 1
+    if h_pos[0] == t_pos[0] - 2 and h_pos[1] == t_pos[1] - 1:  # up 2 left 1
+        t_pos[0] -= 1
+        t_pos[1] -= 1
 
-    if h_pos[0] == l_pos[0] + 1 and h_pos[1] == l_pos[1] - 2:  # down 1 left 2
-        l_pos[0] += 1
-        l_pos[1] -= 1
+    if h_pos[0] == t_pos[0] + 1 and h_pos[1] == t_pos[1] - 2:  # down 1 left 2
+        t_pos[0] += 1
+        t_pos[1] -= 1
 
-    if h_pos[0] == l_pos[0] + 2 and h_pos[1] == l_pos[1] - 1:  # down 2 left 1
-        l_pos[0] += 1
-        l_pos[1] -= 1
+    if h_pos[0] == t_pos[0] + 2 and h_pos[1] == t_pos[1] - 1:  # down 2 left 1
+        t_pos[0] += 1
+        t_pos[1] -= 1
 
-    if h_pos[0] == l_pos[0] - 2 and h_pos[1] == l_pos[1] +1 :  # up 2 right 1 
-        l_pos[0] -= 1
-        l_pos[1] += 1
+    if h_pos[0] == t_pos[0] - 2 and h_pos[1] == t_pos[1] +1 :  # up 2 right 1 
+        t_pos[0] -= 1
+        t_pos[1] += 1
 
-    if h_pos[0] == l_pos[0] - 1 and h_pos[1] == l_pos[1] + 2: # up 1 right 2
-        l_pos[0] -= 1
-        l_pos[1] += 1
+    if h_pos[0] == t_pos[0] - 1 and h_pos[1] == t_pos[1] + 2:  # up 1 right 2
+        t_pos[0] -= 1
+        t_pos[1] += 1
+
+    if h_pos[0] == t_pos[0] + 2 and h_pos[1] == t_pos[1] + 1:  # down 2 right 1
+        t_pos[0] += 1
+        t_pos[1] += 1
+
+    if h_pos[0] == t_pos[0] + 1 and h_pos[1] == t_pos[1] + 2:  # doown 1 right 2
+        t_pos[0] += 1
+        t_pos[1] += 1
+    visited += validate(t_pos, matrix_copy)
+    return visited
+
+
+def validate(t_pos, matrix_copy):
+    """Check if already visited and return 1 if true."""
+    if matrix_copy[t_pos[0]][t_pos[1]] == 1:
+        return 0
+    
+    matrix_copy[t_pos[0]][t_pos[1]] = 1
+    return 1
 
 
 
-def move_h(move, matrix, matrix_copy, h_pos):
+def move_h(move, matrix, matrix_copy, h_pos, t_pos):
     """Move the H marker and check if already traversed."""
+    visited = 0
     if move['direction'] == 'U':
-        move_up(move['steps'], matrix, matrix_copy, h_pos)
+        visited += move_up(move['steps'], matrix, matrix_copy, h_pos, t_pos)
     if move['direction'] == 'D':
-        move_down(move['steps'], matrix, matrix_copy, h_pos)
+        visited += move_down(move['steps'], matrix, matrix_copy, h_pos, t_pos)
     if move['direction'] == 'L':
-        move_left(move['steps'], matrix, matrix_copy, h_pos)
+        visited += move_left(move['steps'], matrix, matrix_copy, h_pos, t_pos)
     if move['direction'] == 'R':
-        move_right(move['steps'], matrix, matrix_copy, h_pos)
-    return visited(matrix, matrix_copy, h_pos, l_pos)
+        visited += move_right(move['steps'], matrix, matrix_copy, h_pos, t_pos)
+    return visited
 
-def move_up(steps, matrix, matrix_copy, h_pos):
+def move_up(steps, matrix, matrix_copy, h_pos, t_pos):
     """Move H up."""
-    h_pos[1] = h_pos[1] + steps
+    visited = 0
+    for _ in range(0, steps):
+        h_pos[0] = h_pos[0] + 1
+        visited += move_t(matrix, matrix_copy, h_pos, t_pos)
+    return visited
 
 
-def move_down(steps, matrix, matrix_copy, h_pos):
+def move_down(steps, matrix, matrix_copy, h_pos, t_pos):
     """Move H down."""
-    h_pos[1] = h_pos[1] - steps
+    visited = 0
+    for _ in range(0, steps):
+        h_pos[0] = h_pos[0] - 1
+        visited += move_t(matrix, matrix_copy, h_pos, t_pos)
+    return visited
 
 
-def move_left(steps, matrix, matrix_copy, h_pos):
+def move_left(steps, matrix, matrix_copy, h_pos, t_pos):
     """Move H left."""
-    h_pos[0] = h_pos[0] - steps
+    visited = 0
+    for _ in range(0, steps):
+        h_pos[1] = h_pos[1] - 1
+        visited += move_t(matrix, matrix_copy, h_pos, t_pos)
+    return visited
 
 
-def move_right(steps, matrix, matrix_copy, h_pos):
+def move_right(steps, matrix, matrix_copy, h_pos, t_pos):
     """Move H right."""
-    h_pos[0] = h_pos[0] + steps
-
+    visited = 0
+    for _ in range(0, steps):
+        h_pos[1] = h_pos[1] + 1
+        visited += move_t(matrix, matrix_copy, h_pos, t_pos)
+    return visited
 
 def copy_matrix(matrix):
     """Deep copy a matrix and return an equal one."""
@@ -156,12 +207,17 @@ def get_moves(inputfile):
     return return_list
 
 
-def pp(list_to_print, h_pos):
+def pp(list_to_print, h_pos, t_pos):
     """Print list pretty."""
+    h_pos_temp = list_to_print[h_pos[0]][h_pos[1]]
+    t_pos_temp = list_to_print[t_pos[0]][t_pos[1]]
     list_to_print[h_pos[0]][h_pos[1]] = 'H'
+    list_to_print[t_pos[0]][t_pos[1]] = 'T'
     for thing in reversed(list_to_print):
         print(f'{thing}')
     print()
+    list_to_print[h_pos[0]][h_pos[1]] = h_pos_temp
+    list_to_print[t_pos[0]][t_pos[1]] = t_pos_temp
 
 
 if __name__ == '__main__':
